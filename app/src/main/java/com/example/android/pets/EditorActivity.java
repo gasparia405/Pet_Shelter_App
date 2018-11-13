@@ -82,7 +82,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private PetDbOpenHelper mDbHelper;
 
-    private static final int PET_LOADER = 0;
+    private static final int EXISTING_PET_LOADER = 0;
 
     private Uri mCurrentPetUri;
 
@@ -92,12 +92,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         setContentView(R.layout.activity_editor);
 
         Intent intent = getIntent();
-        Uri currentPetUri = intent.getData();
+        mCurrentPetUri = intent.getData();
 
-        if (currentPetUri == null) {
+        if (mCurrentPetUri == null) {
             setTitle(R.string.editor_activity_title_new_pet);
+
+            invalidateOptionsMenu();
         } else {
             setTitle(R.string.editor_activity_title_edit_pet);
+
+            getLoaderManager().initLoader(EXISTING_PET_LOADER,null,this);
         }
 
         // Find all relevant views that we will need to read user input from
@@ -115,8 +119,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mGenderSpinner.setOnTouchListener(mTouchListener);
 
         setupSpinner();
-
-        getLoaderManager().initLoader(PET_LOADER, null, this);
     }
 
     /**
